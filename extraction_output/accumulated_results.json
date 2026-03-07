@@ -1,0 +1,262 @@
+{
+  "metadata": {
+    "last_updated": "2026-03-07T19:06:58+00:00",
+    "total_processed": 2,
+    "total_errors": 0
+  },
+  "vocabulary": {
+    "fastChanges": {
+      "description": "Частые изменения КОДА, короткие циклы РАЗРАБОТКИ, сокращение цикла релиза/деплоя. НЕ путать с: производительностью системы (скорость ответа, латенси), автоматизацией бизнес-процессов, контейнеризацией, настройкой очередей сообщений, real-time обновлениями данных для пользователей",
+      "sources": [],
+      "is_baseline": true
+    },
+    "moreBugs": {
+      "description": "Рост количества багов, увеличение ошибок в коде",
+      "sources": [],
+      "is_baseline": true
+    },
+    "improvedStability": {
+      "description": "Улучшение стабильности СИСТЕМЫ: рост crash-free rate, снижение сбоев, повышение надёжности в production. НЕ путать с: качеством архитектуры, оптимизацией производительности запросов",
+      "sources": [],
+      "is_baseline": true
+    },
+    "lessChanges": {
+      "description": "Меньше изменений в коде, реже правки, стабильная кодовая база",
+      "sources": [],
+      "is_baseline": true
+    },
+    "qualityArch": {
+      "description": "Качественная архитектура: модульная архитектура, слоистая декомпозиция, чистая архитектура, продуманное проектирование ER-моделей. НЕ путать с: стабильностью системы, производительностью",
+      "sources": [],
+      "is_baseline": true
+    },
+    "thoroughDesign": {
+      "description": "Тщательное проектирование, продуманный дизайн системы, длительная фаза проектирования",
+      "sources": [],
+      "is_baseline": true
+    },
+    "shortcutArch": {
+      "description": "Упрощённая архитектура, архитектурные срезы, быстрые решения в ущерб качеству",
+      "sources": [],
+      "is_baseline": true
+    },
+    "sdui": {
+      "description": "Server-Driven UI, динамический UI с сервера, JSON-конфигурации интерфейса",
+      "sources": [],
+      "is_baseline": true
+    },
+    "compatibility": {
+      "description": "Проблемы совместимости версий",
+      "sources": [],
+      "is_baseline": true
+    },
+    "rollback": {
+      "description": "Необходимость отката изменений",
+      "sources": [],
+      "is_baseline": true
+    },
+    "monitoring": {
+      "description": "Необходимость мониторинга и наблюдаемости системы (observability)",
+      "sources": [],
+      "is_baseline": true
+    },
+    "reducedErrors": {
+      "description": "Сокращение ошибок в production, снижение количества инцидентов",
+      "sources": [],
+      "is_baseline": true
+    },
+    "highTestCoverage": {
+      "description": "Высокое покрытие тестами, code review, стандарты качества кода",
+      "sources": [],
+      "is_baseline": true
+    },
+    "offlineModeSupport": {
+      "description": "Реализация офлайн-режима в мобильных приложениях: локальное кэширование данных, синхронизация при восстановлении соединения, управление состоянием приложения без сети. НЕ путать с: performanceOptimization (оптимизация скорости ответа), crossPlatformDev (мультиплатформенная разработка)",
+      "sources": [
+        "Flood_resume_CV_done/Anton_Nazarov_iOS_2024.pdf"
+      ],
+      "is_baseline": false
+    },
+    "onDeviceMlInference": {
+      "description": "Запуск ML-моделей непосредственно на устройстве без обращения к серверу (CoreML, Vision, MPS): интеграция обученных моделей, offline-инференс в реальном времени. НЕ путать с: arXrDevelopment (AR без ML-компоненты), monitoring (серверная ML-инфраструктура)",
+      "sources": [
+        "Flood_resume_CV_done/Anton_Nazarov_iOS_2024.pdf"
+      ],
+      "is_baseline": false
+    },
+    "sharedNativeCore": {
+      "description": "Создание общего нативного ядра на C++ для переиспользования бизнес-логики между несколькими платформами (iOS, Android): платформо-независимый слой кода, интегрируемый через нативные мосты в каждое приложение. НЕ путать с: crossPlatformDev (единая кодовая база на уровне UI-фреймворка), nativePluginIntegration (мосты к платформенным API)",
+      "sources": [
+        "Flood_resume_CV_done/Anton_Nazarov_iOS_2024.pdf"
+      ],
+      "is_baseline": false
+    },
+    "paymentSystemIntegration": {
+      "description": "Интеграция платёжных систем в мобильные приложения (Apple Pay, in-app payments): соблюдение требований безопасности и соответствия стандартам, координация с backend и бизнес-командами, снижение метрики отказов платежей. НЕ путать с: ciCdAutomation (автоматизация сборки/деплоя)",
+      "sources": [
+        "Flood_resume_CV_done/Anton_Nazarov_iOS_2024.pdf"
+      ],
+      "is_baseline": false
+    },
+    "knowledgeSharing": {
+      "description": "Систематическая передача знаний во внешнее сообщество: преподавание курсов, выступления на технических конференциях, публикация статей и видеоматериалов. НЕ путать с: teamLeadership (внутреннее управление командой и наставничество)",
+      "sources": [
+        "Flood_resume_CV_done/Anton_Nazarov_iOS_2024.pdf"
+      ],
+      "is_baseline": false
+    },
+    "qrCodeIntegration": {
+      "description": "Интеграция QR-кода сканера и генератора в мобильное приложение для автоматизации бизнес-процессов: учёт посещаемости сотрудников, проверка наличия товаров на складе, замена ручных и телефонных процессов. НЕ путать с: onDeviceMlInference (ML-распознавание изображений), offlineModeSupport (работа без сети)",
+      "sources": [
+        "OM_Stepan_Flood_Resume_done/flood_resume_cv/#Resume - iOS Developer Dmitriy Skvortsov (2).pdf"
+      ],
+      "is_baseline": false
+    },
+    "appLocalization": {
+      "description": "Локализация мобильного приложения: перевод UI-строк на несколько языков, поддержка нескольких локалей (i18n/l10n), работа с языковыми ресурсами приложения. НЕ путать с: crossPlatformDev (мультиплатформенная разработка), sharedNativeCore (общее нативное ядро)",
+      "sources": [
+        "OM_Stepan_Flood_Resume_done/flood_resume_cv/#Resume - iOS Developer Dmitriy Skvortsov (2).pdf"
+      ],
+      "is_baseline": false
+    },
+    "appStorePublishing": {
+      "description": "Подготовка и публикация мобильного приложения в App Store: соответствие гайдлайнам Apple, прохождение ревью, оформление метаданных. НЕ путать с: ciCdAutomation (автоматизация сборки и деплоя), paymentSystemIntegration (интеграция платёжных систем)",
+      "sources": [
+        "OM_Stepan_Flood_Resume_done/flood_resume_cv/#Resume - iOS Developer Dmitriy Skvortsov (2).pdf"
+      ],
+      "is_baseline": false
+    }
+  },
+  "rules": [
+    {
+      "label": "rule_fast_bugs",
+      "formula": "fastChanges -> moreBugs",
+      "sources": [],
+      "is_baseline": true
+    },
+    {
+      "label": "rule_stability_less_changes",
+      "formula": "improvedStability -> lessChanges",
+      "sources": [],
+      "is_baseline": true
+    },
+    {
+      "label": "rule_bugs_changes_conflict",
+      "formula": "~(moreBugs & lessChanges)",
+      "sources": [],
+      "is_baseline": true
+    },
+    {
+      "label": "rule_quality_design",
+      "formula": "qualityArch -> thoroughDesign",
+      "sources": [],
+      "is_baseline": true
+    },
+    {
+      "label": "rule_fast_shortcut",
+      "formula": "fastChanges -> shortcutArch",
+      "sources": [],
+      "is_baseline": true
+    },
+    {
+      "label": "rule_shortcut_thorough_conflict",
+      "formula": "~(shortcutArch & thoroughDesign)",
+      "sources": [],
+      "is_baseline": true
+    },
+    {
+      "label": "rule_sdui_concerns",
+      "formula": "sdui -> compatibility & rollback & monitoring",
+      "sources": [],
+      "is_baseline": true
+    },
+    {
+      "label": "rule_offline_requires_performance",
+      "formula": "offlineModeSupport -> performanceOptimization",
+      "sources": [
+        "Flood_resume_CV_done/Anton_Nazarov_iOS_2024.pdf"
+      ],
+      "is_baseline": false
+    },
+    {
+      "label": "rule_ondevice_ml_enables_offline",
+      "formula": "onDeviceMlInference -> offlineModeSupport",
+      "sources": [
+        "Flood_resume_CV_done/Anton_Nazarov_iOS_2024.pdf"
+      ],
+      "is_baseline": false
+    },
+    {
+      "label": "rule_ondevice_ml_requires_performance",
+      "formula": "onDeviceMlInference -> performanceOptimization",
+      "sources": [
+        "Flood_resume_CV_done/Anton_Nazarov_iOS_2024.pdf"
+      ],
+      "is_baseline": false
+    },
+    {
+      "label": "rule_shared_core_requires_native_bridge",
+      "formula": "sharedNativeCore -> nativePluginIntegration",
+      "sources": [
+        "Flood_resume_CV_done/Anton_Nazarov_iOS_2024.pdf"
+      ],
+      "is_baseline": false
+    },
+    {
+      "label": "rule_shared_core_implies_crossplatform",
+      "formula": "sharedNativeCore -> crossPlatformDev",
+      "sources": [
+        "Flood_resume_CV_done/Anton_Nazarov_iOS_2024.pdf"
+      ],
+      "is_baseline": false
+    },
+    {
+      "label": "rule_payment_requires_testing",
+      "formula": "paymentSystemIntegration -> highTestCoverage",
+      "sources": [
+        "Flood_resume_CV_done/Anton_Nazarov_iOS_2024.pdf"
+      ],
+      "is_baseline": false
+    },
+    {
+      "label": "rule_payment_requires_monitoring",
+      "formula": "paymentSystemIntegration -> monitoring",
+      "sources": [
+        "Flood_resume_CV_done/Anton_Nazarov_iOS_2024.pdf"
+      ],
+      "is_baseline": false
+    },
+    {
+      "label": "rule_qr_reduces_errors",
+      "formula": "qrCodeIntegration -> reducedErrors",
+      "sources": [
+        "OM_Stepan_Flood_Resume_done/flood_resume_cv/#Resume - iOS Developer Dmitriy Skvortsov (2).pdf"
+      ],
+      "is_baseline": false
+    },
+    {
+      "label": "rule_appstore_requires_stability",
+      "formula": "appStorePublishing -> highTestCoverage",
+      "sources": [
+        "OM_Stepan_Flood_Resume_done/flood_resume_cv/#Resume - iOS Developer Dmitriy Skvortsov (2).pdf"
+      ],
+      "is_baseline": false
+    }
+  ],
+  "processed_files": {
+    "Flood_resume_CV_done/Anton_Nazarov_iOS_2024.pdf": {
+      "status": "success",
+      "timestamp": "2026-03-07T19:04:41+00:00",
+      "vocab_added": 5,
+      "rules_added": 7,
+      "claims_found": 23
+    },
+    "OM_Stepan_Flood_Resume_done/flood_resume_cv/#Resume - iOS Developer Dmitriy Skvortsov (2).pdf": {
+      "status": "success",
+      "timestamp": "2026-03-07T19:06:58+00:00",
+      "vocab_added": 3,
+      "rules_added": 2,
+      "claims_found": 12
+    }
+  }
+}
