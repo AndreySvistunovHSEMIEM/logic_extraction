@@ -1,0 +1,17 @@
+[2026-03-07 22:01:12] === Pipeline started ===
+[2026-03-07 22:01:12] Resume root: /home/texnik71rus/projects/HRCOM/HRom_resume_fabricated
+[2026-03-07 22:01:12] Results JSON: /home/texnik71rus/projects/HRCOM/logic_extraction/extraction_output/accumulated_results.json
+[2026-03-07 22:01:12] Already processed: 0 files
+[2026-03-07 22:01:12] Limit: 3 files this run
+[2026-03-07 22:01:12] --- Processing directory: CV_mostly_English_done/cv_mostly_english ---
+[2026-03-07 22:01:12] [1 total, #1 this run] Processing: CV_mostly_English_done/cv_mostly_english/AUnityCvF.pdf
+[2026-03-07 22:01:12]   Attempt 1/3 for CV_mostly_English_done/cv_mostly_english/AUnityCvF.pdf
+[2026-03-07 22:03:03] --- Processing directory: Flood_resume_CV_done ---
+[2026-03-07 22:03:03] [2 total, #2 this run] Processing: Flood_resume_CV_done/Anton_Nazarov_iOS_2024.pdf
+[2026-03-07 22:03:03]   Attempt 1/3 for Flood_resume_CV_done/Anton_Nazarov_iOS_2024.pdf
+[2026-03-07 22:04:41] --- Processing directory: OM_Stepan_Flood_Resume_done/flood_resume_cv ---
+[2026-03-07 22:04:41] [3 total, #3 this run] Processing: OM_Stepan_Flood_Resume_done/flood_resume_cv/#Resume - iOS Developer Dmitriy Skvortsov (2).pdf
+[2026-03-07 22:04:41]   Attempt 1/3 for OM_Stepan_Flood_Resume_done/flood_resume_cv/#Resume - iOS Developer Dmitriy Skvortsov (2).pdf
+[2026-03-07 22:06:58] --- Processing directory: Resume_mostly_Russian/resume_almost_russian ---
+[2026-03-07 22:06:58] === Pipeline finished ===
+[2026-03-07 22:06:58] Processed this run: 3, total overall: 3
