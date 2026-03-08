@@ -25,6 +25,11 @@ PROMPT_TEMPLATE = SCRIPT_DIR / "prompt_template.txt"
 LOG_FILE = SCRIPT_DIR / "pipeline.log"
 
 MAX_RETRIES = 2
+RATE_LIMIT_BACKOFF = 60  # секунд ожидания при лимите
+RATE_LIMIT_PATTERNS = [
+    "rate limit", "too many requests", "429", "quota exceeded",
+    "overloaded", "capacity", "try again later", "resource_exhausted",
+]
 
 RESUME_DIRS = [
     "CV_mostly_English_done/cv_mostly_english",
@@ -33,7 +38,44 @@ RESUME_DIRS = [
     "Resume_mostly_Russian/resume_almost_russian",
 ]
 
-ALLOWED_EXT = {"pdf", "docx", "txt"}
+ALLOWED_EXT = {"pdf"}
+
+
+# ---------------------------------------------------------------------------
+# Rate-limit detection & global pause
+# ---------------------------------------------------------------------------
+def _is_rate_limit(text: str) -> bool:
+    lower = text.lower()
+    return any(p in lower for p in RATE_LIMIT_PATTERNS)
+
+
+class RateLimitGuard:
+    """Глобальная пауза: когда один воркер ловит лимит, все остальные ждут."""
+
+    def __init__(self):
+        self._event = asyncio.Event()
+        self._event.set()  # изначально открыто
+        self._lock = asyncio.Lock()
+        self._resume_at: float = 0
+
+    async def pause(self, seconds: int) -> None:
+        async with self._lock:
+            import time
+            target = time.monotonic() + seconds
+            if target <= self._resume_at:
+                return  # уже ждём дольше
+            self._resume_at = target
+            self._event.clear()
+            log.warning("Rate limit hit — pausing ALL workers for %d sec", seconds)
+
+        await asyncio.sleep(seconds)
+        self._event.set()
+        log.info("Rate limit pause ended, resuming workers")
+
+    async def wait(self) -> None:
+        """Каждый воркер вызывает перед запросом."""
+        await self._event.wait()
+
 
 # ---------------------------------------------------------------------------
 # Logging
@@ -118,7 +160,7 @@ def collect_files(data: dict, max_files: int) -> list[tuple[Path, str]]:
             if ext not in ALLOWED_EXT:
                 continue
             rel = str(f.relative_to(RESUME_ROOT))
-            if rel in processed:
+            if processed.get(rel, {}).get("status") == "success":
                 continue
             files.append((f, rel))
             if 0 < max_files <= len(files):
@@ -130,19 +172,9 @@ def collect_files(data: dict, max_files: int) -> list[tuple[Path, str]]:
 # ---------------------------------------------------------------------------
 # Build prompt
 # ---------------------------------------------------------------------------
-def build_prompt(resume_path: Path, data: dict) -> str:
+def build_prompt(resume_path: Path) -> str:
     template = PROMPT_TEMPLATE.read_text(encoding="utf-8")
-
-    vocab = {k: v["description"] for k, v in data["vocabulary"].items()}
-    rules = [{"label": r["label"], "formula": r["formula"]} for r in data["rules"]]
-
-    vocab_json = json.dumps(vocab, ensure_ascii=False, indent=2)
-    rules_json = json.dumps(rules, ensure_ascii=False, indent=2)
-
-    prompt = template.replace("$RESUME_PATH", str(resume_path))
-    prompt = prompt.replace("$CURRENT_VOCAB_JSON", vocab_json)
-    prompt = prompt.replace("$CURRENT_RULES_JSON", rules_json)
-    return prompt
+    return template.replace("$RESUME_PATH", str(resume_path))
 
 
 # ---------------------------------------------------------------------------
@@ -260,6 +292,7 @@ async def process_file(
     lock: asyncio.Lock,
     sem: asyncio.Semaphore,
     counter: dict,
+    guard: RateLimitGuard,
 ) -> None:
     async with sem:
         counter["started"] += 1
@@ -267,13 +300,16 @@ async def process_file(
         total_so_far = counter["already"] + idx
         log.info("[%d total, #%d this run] Processing: %s", total_so_far, idx, rel_path)
 
-        # Build prompt under lock (reads current vocab/rules)
-        async with lock:
-            prompt = build_prompt(abs_path, data)
+        prompt = build_prompt(abs_path)
 
         last_error = ""
-        for attempt in range(1, MAX_RETRIES + 2):
+        attempt = 0
+        while attempt < MAX_RETRIES + 1:
+            attempt += 1
             log.info("  Attempt %d/%d for %s", attempt, MAX_RETRIES + 1, rel_path)
+
+            # Wait if global rate-limit pause is active
+            await guard.wait()
 
             try:
                 proc = await asyncio.create_subprocess_exec(
@@ -287,16 +323,35 @@ async def process_file(
                 stdout, stderr = await proc.communicate()
 
                 if proc.returncode != 0:
-                    last_error = stderr.decode(errors="replace").strip()[:200]
-                    log.warning("  claude CLI failed (rc=%d): %s", proc.returncode, last_error)
+                    last_error = stderr.decode(errors="replace").strip()[:500]
+                    stdout_text = stdout.decode(errors="replace").strip()[:500]
+                    combined = f"{last_error} {stdout_text}"
+
+                    if _is_rate_limit(combined):
+                        log.warning("  Rate limit for %s: %s", rel_path, last_error[:200])
+                        await guard.pause(RATE_LIMIT_BACKOFF)
+                        attempt -= 1  # не считаем лимит как попытку
+                        continue
+
+                    log.warning("  claude CLI failed (rc=%d): %s", proc.returncode, last_error[:200])
                     if attempt <= MAX_RETRIES:
                         await asyncio.sleep(5)
                     continue
 
-                parsed = parse_claude_output(stdout.decode(errors="replace"))
+                raw_output = stdout.decode(errors="replace")
+
+                # Rate limit может прийти и в stdout (в JSON-обёртке)
+                if _is_rate_limit(raw_output):
+                    log.warning("  Rate limit in stdout for %s", rel_path)
+                    await guard.pause(RATE_LIMIT_BACKOFF)
+                    attempt -= 1
+                    continue
+
+                parsed = parse_claude_output(raw_output)
                 if parsed is None:
                     last_error = "Could not parse JSON from Claude response"
                     log.warning("  %s for %s", last_error, rel_path)
+                    log.warning("  Raw response (first 500 chars): %s", raw_output[:500])
                     if attempt <= MAX_RETRIES:
                         await asyncio.sleep(5)
                     continue
@@ -353,6 +408,7 @@ async def run(max_files: int, concurrency: int) -> None:
 
     lock = asyncio.Lock()
     sem = asyncio.Semaphore(concurrency)
+    guard = RateLimitGuard()
     counter = {
         "already": already,
         "started": 0,
@@ -362,7 +418,7 @@ async def run(max_files: int, concurrency: int) -> None:
     }
 
     tasks = [
-        asyncio.create_task(process_file(abs_p, rel_p, data, lock, sem, counter))
+        asyncio.create_task(process_file(abs_p, rel_p, data, lock, sem, counter, guard))
         for abs_p, rel_p in files
     ]
 
