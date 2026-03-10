@@ -460,6 +460,8 @@
     } finally {
       progress.classList.remove('visible');
       submitBtn.disabled = false;
+      // Reset file input so re-selecting the same file triggers 'change'
+      fileInput.value = '';
     }
   });
 
