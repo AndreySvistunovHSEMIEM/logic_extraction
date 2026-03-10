@@ -46,9 +46,21 @@ def _call_llm(user_message: str) -> dict:
             {"role": "system", "content": ANALYSIS_SYSTEM_PROMPT},
             {"role": "user", "content": user_message},
         ],
+        timeout=60,
     )
 
-    return json.loads(response.choices[0].message.content)
+    content = response.choices[0].message.content
+    if content is None:
+        raise ValueError("LLM returned empty content (None)")
+
+    data = json.loads(content)
+
+    if "contradictions" not in data or "overall_assessment" not in data:
+        raise ValueError(
+            "LLM response missing required keys: 'contradictions' and/or 'overall_assessment'"
+        )
+
+    return data
 
 
 def analyze_contradictions(

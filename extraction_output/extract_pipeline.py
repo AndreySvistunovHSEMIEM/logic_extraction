@@ -116,16 +116,18 @@ def save_data(data: dict) -> None:
 # ---------------------------------------------------------------------------
 def init_results() -> dict:
     """Создать baseline из domain/rules.py."""
-    rules_py = SCRIPT_DIR.parent / "domain" / "rules.py"
-    ns: dict = {}
-    exec(rules_py.read_text(encoding="utf-8"), ns)
+    domain_dir = str(SCRIPT_DIR.parent)
+    if domain_dir not in sys.path:
+        sys.path.insert(0, domain_dir)
+
+    from domain.rules import DOMAIN_VOCABULARY, DOMAIN_RULES
 
     vocabulary = {}
-    for name, desc in ns["DOMAIN_VOCABULARY"].items():
+    for name, desc in DOMAIN_VOCABULARY.items():
         vocabulary[name] = {"description": desc, "sources": [], "is_baseline": True}
 
     rules = []
-    for label, formula in ns["DOMAIN_RULES"]:
+    for label, formula in DOMAIN_RULES:
         rules.append({"label": label, "formula": formula, "sources": [], "is_baseline": True})
 
     data = {

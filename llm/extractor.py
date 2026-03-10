@@ -25,7 +25,16 @@ def extract_predicates(resume_text: str) -> dict:
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": f"Текст резюме:\n\n{resume_text}"},
         ],
+        timeout=60,
     )
 
     content = response.choices[0].message.content
-    return json.loads(content)
+    if content is None:
+        raise ValueError("LLM returned empty content (None)")
+
+    data = json.loads(content)
+
+    if not isinstance(data.get("claims"), list):
+        raise ValueError("LLM response missing 'claims' list")
+
+    return data

@@ -27,16 +27,11 @@ def _save_json(path: Path, data: dict) -> None:
 # ---------------------------------------------------------------------------
 def cmd_init(output_path: Path) -> None:
     # Импортируем baseline из domain/rules.py
-    rules_py = Path(__file__).resolve().parent.parent / "domain" / "rules.py"
-    if not rules_py.exists():
-        print(f"ERROR: {rules_py} not found", file=sys.stderr)
-        sys.exit(1)
+    domain_dir = str(Path(__file__).resolve().parent.parent)
+    if domain_dir not in sys.path:
+        sys.path.insert(0, domain_dir)
 
-    # Парсим rules.py через exec
-    ns: dict = {}
-    exec(rules_py.read_text(encoding="utf-8"), ns)
-    domain_vocab: dict[str, str] = ns["DOMAIN_VOCABULARY"]
-    domain_rules: list[tuple[str, str]] = ns["DOMAIN_RULES"]
+    from domain.rules import DOMAIN_VOCABULARY as domain_vocab, DOMAIN_RULES as domain_rules
 
     vocabulary = {}
     for name, desc in domain_vocab.items():

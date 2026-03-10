@@ -18,7 +18,7 @@ DOMAIN_RULES: list[tuple[str, str]] = [
     # Упрощённая и тщательная архитектура несовместимы
     ("rule_shortcut_thorough_conflict", "~(shortcutArch & thoroughDesign)"),
     # SDUI влечёт проблемы совместимости, необходимость отката и мониторинга
-    ("rule_sdui_concerns", "sdui -> compatibility & rollback & monitoring"),
+    ("rule_sdui_concerns", "sdui -> (compatibility & rollback & monitoring)"),
 ]
 
 # Словарь доменных переменных с описаниями.
