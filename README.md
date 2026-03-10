@@ -66,7 +66,7 @@ logic_extraction/
 ```bash
 uv sync
 cp .env.example .env
-# Вписать OPENAI_API_KEY в .env
+# Вписать LLM_API_KEY в .env
 ```
 
 ## Запуск
@@ -153,7 +153,7 @@ Rules — экспертные эвристики из `domain/rules.py`, код
 | `rule_quality_design` | `qualityArch -> thoroughDesign` | Качественная архитектура требует тщательного проектирования |
 | `rule_fast_shortcut` | `fastChanges -> shortcutArch` | Быстрые изменения ведут к упрощённой архитектуре |
 | `rule_shortcut_thorough_conflict` | `~(shortcutArch & thoroughDesign)` | Упрощённая и тщательная архитектура несовместимы |
-| `rule_sdui_concerns` | `sdui -> compatibility & rollback & monitoring` | SDUI влечёт проблемы совместимости |
+| `rule_sdui_concerns` | `sdui -> (compatibility & rollback & monitoring)` | SDUI влечёт проблемы совместимости |
 
 Правила не берутся из резюме — их пишет эксперт предметной области. Они выражают общеизвестные инженерные trade-off'ы.
 
