@@ -101,7 +101,7 @@ def test_complex_formula():
 
 def test_domain_rule_sdui():
     """Парсинг доменного правила SDUI."""
-    result = parse_formula("sdui -> compatibility & rollback & monitoring")
+    result = parse_formula("sdui -> (compatibility & rollback & monitoring)")
     expected = Implies(
         Var("sdui"),
         And(And(Var("compatibility"), Var("rollback")), Var("monitoring"))
