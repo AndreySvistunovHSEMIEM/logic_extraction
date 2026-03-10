@@ -1,5 +1,6 @@
 """Flask-backend for the resume fact-checker web UI."""
 
+import logging
 import os
 import sys
 import tempfile
@@ -8,10 +9,11 @@ from flask import Flask, request, jsonify, send_file
 
 # Allow importing project modules from parent directory
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, parent_dir)
+if parent_dir not in sys.path:
+    sys.path.insert(0, parent_dir)
 
 from main import run_pipeline  # noqa: E402
-from config import LLM_MODEL   # noqa: E402
+from config import LLM_MODEL, FLASK_DEBUG, FLASK_HOST, FLASK_PORT  # noqa: E402
 
 app = Flask(__name__)
 
@@ -57,12 +59,13 @@ def check_resume():
 
         report = run_pipeline(tmp.name, verbose=False)
         return jsonify(report)
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    except Exception:
+        logging.exception("Error processing resume")
+        return jsonify({"error": "Internal server error"}), 500
     finally:
         if tmp and os.path.exists(tmp.name):
             os.unlink(tmp.name)
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=8080)
+    app.run(debug=FLASK_DEBUG, host=FLASK_HOST, port=FLASK_PORT)
